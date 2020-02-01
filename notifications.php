@@ -63,7 +63,7 @@ try {
             $day_clear = date('N', time());
             $time_clear = date('H:i');
             if (($day_clear == DAY_CLEAR) && ($time_clear >= TIME_CLEAR_MIN && TIME_CLEAR_MAX >= $time_clear)) {
-                $replaces2clean = ['28 декабря 2019'];//Список замен которые нельзя удалять из базы.
+                $replaces2clean = ['28 декабря 2019'];//Список замен которые нельзя удалять из базы. [всегда нужно чтобы что-то было написано]
                 foreach ($site as $replaces) {
                     if ($replaces['date'] >= time()) {
                         $replaces2clean[] = $replaces['name'];
