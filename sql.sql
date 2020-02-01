@@ -94,3 +94,4 @@ ALTER TABLE `replaces`
 ALTER TABLE `tasks`
   ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`replace_id`) REFERENCES `replaces_files` (`id`),
   ADD CONSTRAINT `tasks_ibfk_2` FOREIGN KEY (`peer_id`) REFERENCES `peers` (`peer_id`);
+
