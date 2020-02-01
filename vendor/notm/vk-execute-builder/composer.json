@@ -1,0 +1,22 @@
+{
+    "name": "notm/vk-execute-builder",
+    "description": "Vk Execute Builder with vk php sdk",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "n0tm",
+            "email": "n0tm3t@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1",
+        "vkcom/vk-php-sdk": "^5.101.0",
+        "monolog/monolog": "^1.24",
+      "ext-json": "*"
+    },
+
+    "autoload": {
+        "psr-4": {"SMITExecute\\Library\\": "src/"}
+    }
+}
