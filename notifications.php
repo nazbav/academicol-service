@@ -113,7 +113,7 @@ try {
             }
             $database->task_delete($task_to_delete);
         }
-        $sleep = (SLEEP_TIME - ((time() - $time_start) > WAIT_FOR_VK) ? (SLEEP_TIME - ((time() - $time_start))) : WAIT_FOR_VK);//Сложно.
+        $sleep = (SLEEP_TIME - ((time() - $time_start) > WAIT_FOR_VK) ? (SLEEP_TIME - ((time() - $time_start))) : WAIT_FOR_VK);//todo: необходимо пересмотреть, вроде работает.
         echo microtime(true) - $time_start, ' ';
         sleep($sleep);
     } while ($run);
