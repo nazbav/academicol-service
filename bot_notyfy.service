@@ -1,0 +1,16 @@
+[Unit]
+Description=Bot notify service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+WorkingDirectory=/work/www/myunit/current
+OOMScoreAdjust=-100
+ExecStart=/usr/bin/env php "/work/www/myunit/current/notifications.php"
+
+[Install]
+WantedBy=multi-user.target
