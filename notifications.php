@@ -97,7 +97,6 @@ try {
                                 break;
                                 //todo: отправка сообщений на почту
                             case 2:
-                                break;
                             default:
                                 $task_to_delete[] = $task['id'];
                                 break;
