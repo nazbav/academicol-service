@@ -24,7 +24,7 @@
 
 5. Запускаем сервисы `systemctl start bot_vk` и `systemctl start bot_notify`
 
-6. Перезагрузка сервисов `systemctl daemon-reload`
+6. Перезагрузка сервисов `systemctl daemon-reload` (когда необходимо)
 
 # "Тесты"
 
