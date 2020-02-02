@@ -39,6 +39,8 @@
 
 2. По приколу на DIR-320 NRU (8 FLASH\32 RAM)(своп+перенос корневой системы на usb-flash) OpenWrt 18.06.6 (тест в рамках ssh сессии, php-cli 7.3, php-curl, php-json, php-mbstring, внешняя mysql база данных)
 
+3. Windows 10 в PHPStorm 2018.3.6. (тест в консоли, php-cli 7.3, php-curl, php-json, php-mbstring, внешняя mysql база данных
+
 # Краткий алгоритм работы поиска замен
 
 1. Проверяем API на наличие изменений.
