@@ -5,6 +5,26 @@
 Сервис разделен на 2 сервиса.
 1. `bot.php` -- сервис обработки команд пользователей, введенных через сообщения сообщества (+ в беседах)
 2. `notifications.php` -- сервис автоматического поиска и уведомления о заменах
+# Установка и запуск
+
+Настройка под 18.04.3 (systemd, php-cli 7.3)
+
+-1. Залить папку с сервисами на сервер.
+
+0. Установить и настроить PHP 7.3, php-curl, php-json, php-mysqli, php-mbstring.
+
+1. Заполнить `config.php`
+
+2. Залить залить в папку `/etc/systemd/system/`, настроить `bot_vk.service` (указать корневую папку проекта)
+2. Залить в папку `/etc/systemd/system/`, настроить `bot_notify.service` (указать корневую папку проекта)
+
+3. Проверяем сервисы `systemctl -i status bot_vk` и `systemctl -i status bot_notify`
+
+4. Автозапуск сервисов `systemctl enable bot_vk` и `systemctl enable bot_notify`
+
+5. Запускаем сервисы `systemctl start bot_vk` и `systemctl start bot_notify`
+
+6. Перезагрузка сервисов `systemctl daemon-reload`
 
 # "Тесты"
 
