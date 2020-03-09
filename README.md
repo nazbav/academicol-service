@@ -1,8 +1,5 @@
 # schedule-service*
 
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/nazbav/schedule-bot-service?style=for-the-badge)
-![PHP](https://img.shields.io/badge/PHP-7.3-green?style=for-the-badge)
-
 Сервис (демон для автоматического уведомления о заменах в расписании)
 Работает через стороннее API.
 Сервис разделен на 2 сервиса.
