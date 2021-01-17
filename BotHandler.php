@@ -16,7 +16,6 @@ use VK\Exceptions\Api\VKApiMessagesUserBlockedException;
 use VK\Exceptions\VKApiException;
 use VK\Exceptions\VKClientException;
 
-
 class BotHandler extends VKCallbackApiHandler
 {
     private $vk;
@@ -24,8 +23,9 @@ class BotHandler extends VKCallbackApiHandler
 
     /**
      * BotHandler constructor.
+     *
      * @param VKApiClient $vk
-     * @param DataBase $db
+     * @param DataBase    $db
      */
     public function __construct(VKApiClient $vk, DataBase $db)
     {
@@ -34,9 +34,10 @@ class BotHandler extends VKCallbackApiHandler
     }
 
     /**
-     * @param int $group_id
+     * @param int         $group_id
      * @param string|null $secret
-     * @param array $object
+     * @param array       $object
+     *
      * @throws VKApiMessagesCantFwdException
      * @throws VKApiMessagesChatBotFeatureException
      * @throws VKApiMessagesChatUserNoAccessException
@@ -58,8 +59,8 @@ class BotHandler extends VKCallbackApiHandler
             $_M = include LANG_BOT;
             $attachments = [];
             //$user_id = (int)$object['from_id'];
-            $use_object = preg_replace('/\[club' . GROUP_ID . '\|.*\]/ui', '', strtr($object['text'], ["\r" => '', "\n" => '']));
-            if (isset($object['action']['type']) && $object['action']['type'] == "chat_invite_user" && $object['action']['member_id'] == -GROUP_ID) {
+            $use_object = preg_replace('/\[club'.GROUP_ID.'\|.*\]/ui', '', strtr($object['text'], ["\r" => '', "\n" => '']));
+            if (isset($object['action']['type']) && $object['action']['type'] == 'chat_invite_user' && $object['action']['member_id'] == -GROUP_ID) {
                 $message = $_M['SELF_BOT_JOIN_MESSAGE'];
             } else {
                 $message = '';
@@ -67,10 +68,10 @@ class BotHandler extends VKCallbackApiHandler
 
             //Command 1
             if (preg_match('/\/групп((ы|а) | )(.*)/iu', $use_object, $matches1, PREG_OFFSET_CAPTURE, 0)) {
-                $matches1[0][0] = strtr($matches1[0][0], ["	" => '', ' ' => '']);
+                $matches1[0][0] = strtr($matches1[0][0], ['	' => '', ' ' => '']);
                 $groups = SPECIAL;
-                if (preg_match_all('/((([1-5]{1})(' . $groups . ')(\-(11|9))(\-[0-9]{1})|([1-5]{1})(' . $groups . ')(\-(11|9)))(,)(([1-5]{1})(' . $groups . ')(\-[0-9]{1,2})(\-[0-9]{1})|([1-5]{1})(' . $groups . ')(\-(11|9))))|(([1-5]{1})(' . $groups . ')(\-[0-9]{1,2})(\-[0-9]{1})|([1-5]{1})(' . $groups . ')(\-(11|9)))/', $matches1[0][0], $matches)) {
-                    $this->database->peers_add($object['peer_id'], (string)$matches[0][0]);
+                if (preg_match_all('/((([1-5]{1})('.$groups.')(\-(11|9))(\-[0-9]{1})|([1-5]{1})('.$groups.')(\-(11|9)))(,)(([1-5]{1})('.$groups.')(\-[0-9]{1,2})(\-[0-9]{1})|([1-5]{1})('.$groups.')(\-(11|9))))|(([1-5]{1})('.$groups.')(\-[0-9]{1,2})(\-[0-9]{1})|([1-5]{1})('.$groups.')(\-(11|9)))/', $matches1[0][0], $matches)) {
+                    $this->database->peers_add($object['peer_id'], (string) $matches[0][0]);
                     $message = sprintf($_M['GROUP_ADD_MESSAGE'], $matches[0][0]);
                 } elseif (isset($matches1[3][0]) && $matches1[3][0] == '0') {
                     $message = $_M['DISABLE_NOTIFY'];
@@ -81,13 +82,13 @@ class BotHandler extends VKCallbackApiHandler
             }
             //Command 1
             if (preg_match('/\/отключить/iu', $use_object, $matches1, PREG_OFFSET_CAPTURE, 0)) {
-                $matches1[0][0] = strtr($matches1[0][0], ["	" => '', ' ' => '']);
+                $matches1[0][0] = strtr($matches1[0][0], ['	' => '', ' ' => '']);
                 $message = $_M['DISABLE_NOTIFY'];
                 $this->database->peers_update($object['peer_id'], 0);
             }
             //Command 1
             if (preg_match('/\/включить/iu', $use_object, $matches1, PREG_OFFSET_CAPTURE, 0)) {
-                $matches1[0][0] = strtr($matches1[0][0], ["	" => '', ' ' => '']);
+                $matches1[0][0] = strtr($matches1[0][0], ['	' => '', ' ' => '']);
                 $message = $_M['ENABLE_NOTIFY'];
                 $this->database->peers_update($object['peer_id'], 1);
             }
@@ -113,13 +114,15 @@ class BotHandler extends VKCallbackApiHandler
                     $message2 = '';
                     foreach ($replaces as $replace) {
                         if ($replace['date'] >= time()) {//search
-                            $message2 .= $replace['name'] . ' -- ' . $replace['url'] . "\r\n";
+                            $message2 .= $replace['name'].' -- '.$replace['url']."\r\n";
                         }
                         $tag = $replace['tag'];
                     }
                     $message = sprintf($_M['REPLACES_TEMPLATE_MASS'], $tag);
-                    if (empty($message2)) $message2 = $_M['NO_REPLACES_TEMPLATE'];
-                    $message .= $message2 . $_M['TIMETABLE_LINK'];
+                    if (empty($message2)) {
+                        $message2 = $_M['NO_REPLACES_TEMPLATE'];
+                    }
+                    $message .= $message2.$_M['TIMETABLE_LINK'];
                 } else {
                     $message = $_M['NO_REPLACES_TEMPLATE'];
                 }

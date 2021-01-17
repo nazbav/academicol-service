@@ -9,22 +9,23 @@ use VK\Client\VKApiClient;
 
 ini_set('date.timezone', 'Europe/Volgograd');
 ini_set('include_path', '/mnt/sda3/bot/daemon/'); //-- указываем директорию с файлами бота.
+
 try {
-    include_once('vendor/autoload.php');
-    include_once('config.php');
-    include_once('database.php');
-    include_once('parser.php');
+    include_once 'vendor/autoload.php';
+    include_once 'config.php';
+    include_once 'database.php';
+    include_once 'parser.php';
 
     $vk = new VKApiClient(API_VERSION);
     $_M = include LANG_BOT;
     $sleep = WAIT_FOR_VK;
     $run = true;
-    $mysql = Mysql::create(DB_HOST, DB_USER, DB_PASSWORD, DB_PORT)->setDatabaseName(DB_NAME)->setCharset("utf8");
+    $mysql = Mysql::create(DB_HOST, DB_USER, DB_PASSWORD, DB_PORT)->setDatabaseName(DB_NAME)->setCharset('utf8');
     $database = new DataBase($mysql);
     do {
         $time_start2 = microtime(true);
         if (!$mysql->getMysqli()->ping()) {//Если база мертва
-            $mysql = Mysql::create(DB_HOST, DB_USER, DB_PASSWORD, DB_PORT)->setDatabaseName(DB_NAME)->setCharset("utf8");
+            $mysql = Mysql::create(DB_HOST, DB_USER, DB_PASSWORD, DB_PORT)->setDatabaseName(DB_NAME)->setCharset('utf8');
             $database = new DataBase($mysql);
         }
         $site = json_decode(_curl(REPLACES_URL), true);
@@ -33,7 +34,7 @@ try {
             foreach ($site as $replaces) {
                 if ($replaces['date'] >= time() && !$database->replaces_file_name($replaces['name'])) {
                     $doc_text = read_doc($replaces['url']);
-                    $replaces['url'] = 'https://docs.google.com/viewer?url=' . urlencode($replaces['url']);
+                    $replaces['url'] = 'https://docs.google.com/viewer?url='.urlencode($replaces['url']);
                     $replaces['url'] = $vk->utils()->getShortLink(ACCESS_TOKEN, ['url' => $replaces['url']])['short_url'];
                     if ($doc_text) {
                         $tags = [];
@@ -41,15 +42,15 @@ try {
                         if (preg_match_all(TEACHER_NAMES_MASK, $doc_text, $matches)) {
                             $matches[0] = array_unique($matches[0]);
                             foreach ($matches[0] as $tag) {
-                                $tags [] = $tag;
+                                $tags[] = $tag;
                             }
                         }
-                        $doc_text = strtr($doc_text, ["\r\n" => '', "\r" => '', "\n" => '', "	" => '', ' ' => '']);
-                        $search_groups = '((([1-5]{1})(' . SPECIAL . ')(\-[0-9]{1,2})(\-[0-9]{1})|([1-5]{1})(' . SPECIAL . ')(\-(11|9)))(,)(([1-5]{1})(' . SPECIAL . ')(\-[0-9]{1,2})(\-[0-9]{1})|([1-5]{1})(' . SPECIAL . ')(\-(11|9))))|(([1-5]{1})(' . SPECIAL . ')(\-[0-9]{1,2})(\-[0-9]{1})|([1-5]{1})(' . SPECIAL . ')(\-(11|9)))';
-                        if (preg_match_all('/' . $search_groups . '/', $doc_text, $matches)) {
+                        $doc_text = strtr($doc_text, ["\r\n" => '', "\r" => '', "\n" => '', '	' => '', ' ' => '']);
+                        $search_groups = '((([1-5]{1})('.SPECIAL.')(\-[0-9]{1,2})(\-[0-9]{1})|([1-5]{1})('.SPECIAL.')(\-(11|9)))(,)(([1-5]{1})('.SPECIAL.')(\-[0-9]{1,2})(\-[0-9]{1})|([1-5]{1})('.SPECIAL.')(\-(11|9))))|(([1-5]{1})('.SPECIAL.')(\-[0-9]{1,2})(\-[0-9]{1})|([1-5]{1})('.SPECIAL.')(\-(11|9)))';
+                        if (preg_match_all('/'.$search_groups.'/', $doc_text, $matches)) {
                             $matches[0] = array_unique($matches[0]);
                             foreach ($matches[0] as $tag) {
-                                $tags [] = $tag;
+                                $tags[] = $tag;
                             }
                         }
                         $tags = array_unique($tags);
@@ -63,7 +64,7 @@ try {
             $day_clear = date('N', time());
             $time_clear = date('H:i');
             if (($day_clear == DAY_CLEAR) && ($time_clear >= TIME_CLEAR_MIN && TIME_CLEAR_MAX >= $time_clear)) {
-                $replaces2clean = ['28 декабря 2019'];//Список замен которые нельзя удалять из базы. [всегда нужно чтобы что-то было написано]
+                $replaces2clean = ['28 декабря 2019']; //Список замен которые нельзя удалять из базы. [всегда нужно чтобы что-то было написано]
                 foreach ($site as $replaces) {
                     if ($replaces['date'] >= time()) {
                         $replaces2clean[] = $replaces['name'];
@@ -76,21 +77,21 @@ try {
         $task_count = $database->task_count();
         if ($task_count) {
             $task_to_delete = [];
-            $task_limit = (int)($task_count / TASK_LIMIT);
+            $task_limit = (int) ($task_count / TASK_LIMIT);
             for ($i = 0; $i <= $task_limit; $i++) { //бъем на пакеты по $task_limit шт.
                 $tasks = $database->task_get(TASK_LIMIT);
                 if (!empty($tasks)) {
-                    $execute = false;//Если есть запросы для вк включаем режим слияния запросов
+                    $execute = false; //Если есть запросы для вк включаем режим слияния запросов
                     $builder = new ExecuteRequest();
                     foreach ($tasks as $task) {
                         switch ($task['type']) {//внешнее поле
                             case 1:
                                 $execute = true;
-                                $message = sprintf($_M['REPLACES_TEMPLATE'], $task['tag'], $task['name'], $task['url']) . "\r\n" . $_M['TIMETABLE_LINK'];
+                                $message = sprintf($_M['REPLACES_TEMPLATE'], $task['tag'], $task['name'], $task['url'])."\r\n".$_M['TIMETABLE_LINK'];
                                 $builder->add(
                                     $builder->create()
-                                        ->setMainMethod("messages")
-                                        ->setSubMethod("send")
+                                        ->setMainMethod('messages')
+                                        ->setSubMethod('send')
                                         ->setParams(['peer_id' => $task['peer_id'], 'random_id' => rand(0, 2000000), 'message' => $message, 'v' => API_VERSION])
                                 );
                                 $task_to_delete[] = $task['id'];
@@ -106,18 +107,17 @@ try {
                         $code_strings = $builder->convertToJS();
                         $code = implode(PHP_EOL, $code_strings);
                         $vk->getRequest()->post('execute', ACCESS_TOKEN, ['v' => API_VERSION,
-                            'code' => $code]);
+                            'code'                                            => $code, ]);
                     }
                 }
                 sleep(WAIT_FOR_VK);
             }
             $database->task_delete($task_to_delete);
         }
-        $sleep = (SLEEP_TIME - ((time() - $time_start) > WAIT_FOR_VK) ? (SLEEP_TIME - ((time() - $time_start))) : WAIT_FOR_VK);//todo: необходимо пересмотреть, вроде работает.
+        $sleep = (SLEEP_TIME - ((time() - $time_start) > WAIT_FOR_VK) ? (SLEEP_TIME - ((time() - $time_start))) : WAIT_FOR_VK); //todo: необходимо пересмотреть, вроде работает.
         echo microtime(true) - $time_start, ' ';
         sleep($sleep);
     } while ($run);
-
 } catch (Throwable $exception) {
     ExceptionWriter($exception);
 }
